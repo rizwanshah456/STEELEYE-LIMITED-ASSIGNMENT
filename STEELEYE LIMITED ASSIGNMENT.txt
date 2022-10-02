@@ -1,0 +1,53 @@
+Question1:- Explain what the simple List component does. 
+
+Ans:- Lists are used to display data in an ordered format and mainly used to display menus on websites. 
+In React, Lists can be created in a similar way as we create lists in JavaScript. Let us see how we transform Lists in regular JavaScript. 
+Lists are used to display data in an ordered format and mainly used to display menus on websites. In React, Lists can be created in a similar way as we create lists in JavaScript. 
+Let us see how we transform Lists in regular JavaScript. The map() function is used for traversing the lists.
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+const myList = ['A', 'B', 'C', 'D', 'E'];
+const listItems = myList.map((myList)=>{
+return <li>{myList}</li>;
+});
+ReactDOM.render(
+<ul> {listItems} </ul>,
+document.getElementById('app')
+);
+export default App;
+
+Output: A B C D E
+
+Question 2- What problems/warnings are there with the code?
+
+While using useState() the 'set' variable should be after the local variable. Fixed code: const [selectedIndex, setSelectedIndex] = useState(); 
+
+Syntax error of PropTypes in WrappedListComponent. It should be arrayOf instead of shapeOf. 
+Fixed code: WrappedListComponent.propTypes = { items: PropTypes.arrayOf( PropTypes.shape({ text: PropTypes.string.isRequired }) ) }; 
+
+WrappedListComponent.defaultProps has items: null. Therefore there is no item to be mapped. 
+Fixed code: WrappedListComponent.defaultProps = { items: [{ text: "First Item" }, { text: "Second Item" }] }; 
+
+Each child in a list should have a unique "key" prop. 
+Fixed code:
+{items.map((item, index) => ( handleClick(index)} text={item.text} index={index} isSelected={selectedIndex} key={index} /> ))} 
+Invalid prop isSelected of type array supplied to WrappedSingleListItem, expected boolean. Therefore converting it to boolean. 
+
+Fixed code: onClickHandler(Boolean(index))} > {text} const handleClick = (index) => { setSelectedIndex(Boolean(index)); console.log("This is index: " + index); };
+
+Question 3:- Please fix, optimize, and/or modify the component as much as you think is necessary. 
+Ans:- Final Code with all the issues fixed and modified is below import PropTypes from "prop-types"; import React, { useState, useEffect, memo } from "react";
+
+// single List Item const WrappedSingleListItem = ({ index, isSelected, onClickHandler, text }) => { return (
+onClickHandler(Boolean(index))} > {text} ); }; 
+WrappedSingleListItem.propTypes = { index: PropTypes.number, isSelected: PropTypes.bool, onClickHandler: PropTypes.func.isRequired, text: PropTypes.string.isRequired }; 
+const SingleListItem = memo(WrappedSingleListItem); 
+
+// List Component const WrappedListComponent = ({ items }) => { const [selectedIndex, setSelectedIndex] = useState(); useEffect(() => { setSelectedIndex(true); }, [items]); 
+const handleClick = (index) => { setSelectedIndex(Boolean(index)); console.log("This is index: " + index); }; return (
+
+{items.map((item, index) => ( handleClick(index)} text={item.text} index={index} isSelected={selectedIndex} key={index} /> ))} ); }; 
+WrappedListComponent.propTypes = { items: PropTypes.arrayOf( PropTypes.shape({ text: PropTypes.string.isRequired }) ) }; 
+WrappedListComponent.defaultProps = { items: [{ text: "First Item" }, { text: "Second Item" }] }; const List = memo(WrappedListComponent); 
+export default List;
